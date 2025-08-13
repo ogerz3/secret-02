@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Полат — Полная шпаргалка: JS / HTML / CSS / React</title>
+  <style>
+    :root{
+      --bg:#0b0f1a; --panel:#0e1525; --muted:#99a3b3; --text:#e6ecf2; --acc:#6ee7ff; --acc2:#a78bfa; --chip:#1b2235; --ok:#10b981; --warn:#f59e0b;
+      --code-bg:#0a1220; --border:#22304a; --highlight:#12233f;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:linear-gradient(180deg,#070b14,#0b1222);color:var(--text);font:500 15px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial}
+    a{color:var(--acc)}
+    code,kbd,pre{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .layout{display:grid;grid-template-columns: 280px 1fr;min-height:100vh}
+    .sidebar{position:sticky;top:0;height:100vh;overflow:auto;padding:18px;border-right:1px solid var(--border);background:linear-gradient(180deg,#0c1426,#0c141f)}
+    .main{padding:24px 28px}
+    .brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+    .brand h1{font-size:18px;margin:0}
+    .chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:var(--chip);border:1px solid var(--border);font-size:12px;color:#cfe3ff}
+    .search{display:flex;gap:10px;margin:14px 0}
+    .search input{flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:#0a1220;color:var(--text);outline:none}
+    .toc{display:grid;gap:8px;margin-top:10px}
+    .toc a{display:flex;justify-content:space-between;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:#0b1322;text-decoration:none}
+    .toc small{color:var(--muted)}
+
+    .section{margin:18px 0;padding:18px;border:1px solid var(--border);border-radius:16px;background:linear-gradient(180deg,#0c1527,#0b1422)}
+    .section h2{margin:0 0 12px;font-size:20px}
+    .grid{display:grid;gap:12px}
+    .cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    @media(max-width:1100px){.layout{grid-template-columns:1fr}.sidebar{position:static;height:auto}.cols-3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:720px){.cols-2,.cols-3{grid-template-columns:1fr}}
+
+    .card{border:1px solid var(--border);border-radius:14px;background:#0a1220;padding:14px}
+    .card h3{margin:0 0 8px;font-size:16px}
+    .card .meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+    .badge{font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid var(--border);background:#0e1a2e;color:#cfe3ff}
+    .desc{color:#c7d2e2;font-size:13px}
+
+    .kv{display:grid;grid-template-columns:140px 1fr;gap:6px 10px;font-size:13px}
+    .kv b{color:#bcd3ff}
+
+    .code{position:relative;background:var(--code-bg);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:10px}
+    .code pre{margin:0;overflow:auto;white-space:pre}
+    .copy{position:absolute;top:8px;right:8px;border:1px solid var(--border);background:#0c1527;color:#d6e6ff;border-radius:8px;padding:6px 8px;font-size:12px;cursor:pointer}
+
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:10px;background:#0d1a30;border:1px solid var(--border);font-size:12px}
+
+    details{border:1px solid var(--border);border-radius:12px;background:#0b1322}
+    details summary{cursor:pointer;padding:10px 12px;font-weight:600}
+    details .details-body{padding:0 12px 12px}
+
+    .hint{font-size:12px;color:var(--muted)}
+
+    .table{width:100%;border-collapse:separate;border-spacing:0 6px}
+    .table th{font-size:12px;color:#bcd3ff;text-align:left;padding:6px 8px}
+    .table td{font-size:13px;padding:10px 8px;background:#0a1220;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .table tr td:first-child{border-left:1px solid var(--border);border-top-left-radius:10px;border-bottom-left-radius:10px}
+    .table tr td:last-child{border-right:1px solid var(--border);border-top-right-radius:10px;border-bottom-right-radius:10px}
+
+    .footer{margin:30px 0 10px;color:var(--muted);font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="chip">🔥 Шпаргалка для собеса</span>
+      </div>
+      <div class="search">
+        <input id="search" placeholder="Поиск по методу/тегу/свойству… (например: includes, useEffect, grid)" />
+      </div>
+      <nav class="toc">
+        <a href="#react"><span>React</span><small>хуки, события, ключевые концепции</small></a>
+        <a href="#javascript"><span>JavaScript</span><small>строки, массивы, объекты, Math, Date</small></a>
+        <a href="#html"><span>HTML</span><small>семантика, формы, мультимедиа</small></a>
+        <a href="#css"><span>CSS</span><small>свойства, селекторы, флекс/грид</small></a>
+        <a href="#snippets"><span>Готовые сниппеты</span><small>мини-примеры под собес</small></a>
+      </nav>
+      <p class="hint">Совет: используй <kbd>Ctrl/⌘ + F</kbd> и фильтр поиска вверху — остаются только карточки с совпадениями.</p>
+    </aside>
+
+    <main class="main">
+      <!-- REACT -->
+      <section id="react" class="section">
+        <h2>React — хуки, события, концепции</h2>
+        <div class="grid cols-2">
+          <div class="card">
+            <h3>Базовые хуки</h3>
+            <div class="table-wrap">
+              <table class="table">
+                <thead><tr><th>Хук</th><th>Категория</th><th>Кратко</th><th>Пример</th></tr></thead>
+                <tbody>
+                  <tr data-key="react useState state">
+                    <td><code>useState</code></td>
+                    <td>Состояние</td>
+                    <td>Локальное состояние компонента</td>
+                    <td><code>const [n,setN]=useState(0)</code></td>
+                  </tr>
+                  <tr data-key="react useEffect side effect lifecycle deps">
+                    <td><code>useEffect</code></td>
+                    <td>Эффекты</td>
+                    <td>Побочные эффекты, зависимости</td>
+                    <td><code>useEffect(()=>{fetchData()},[])</code></td>
+                  </tr>
+                  <tr data-key="react useMemo memoization performance">
+                    <td><code>useMemo</code></td>
+                    <td>Оптимизация</td>
+                    <td>Мемоизация вычислений</td>
+                    <td><code>const v=useMemo(calc,[a,b])</code></td>
+                  </tr>
+                  <tr data-key="react useCallback memoization handlers">
+                    <td><code>useCallback</code></td>
+                    <td>Оптимизация</td>
+                    <td>Мемоизация функций/обработчиков</td>
+                    <td><code>const onClick=useCallback(()=>{},[])</code></td>
+                  </tr>
+                  <tr data-key="react useRef dom mutable">
+                    <td><code>useRef</code></td>
+                    <td>Ссылки</td>
+                    <td>Доступ к DOM/мутабельной ссылке</td>
+                    <td><code>const ref=useRef(null)</code></td>
+                  </tr>
+                  <tr data-key="react useContext context state global">
+                    <td><code>useContext</code></td>
+                    <td>Контекст</td>
+                    <td>Чтение значений контекста</td>
+                    <td><code>const user=useContext(UserCtx)</code></td>
+                  </tr>
+                  <tr data-key="react useReducer reducer state complex">
+                    <td><code>useReducer</code></td>
+                    <td>Состояние</td>
+                    <td>Сложная логика через редьюсер</td>
+                    <td><code>const [s,dispatch]=useReducer(r,init)</code></td>
+                  </tr>
+                  <tr data-key="react useLayoutEffect layout sync">
+                    <td><code>useLayoutEffect</code></td>
+                    <td>Эффекты</td>
+                    <td>Синхронный после DOM, до paint</td>
+                    <td><code>useLayoutEffect(()=>{},[])</code></td>
+                  </tr>
+                  <tr data-key="react useImperativeHandle forwardRef">
+                    <td><code>useImperativeHandle</code></td>
+                    <td>Ссылки</td>
+                    <td>Экспорт собственного API через <code>forwardRef</code></td>
+                    <td><code>useImperativeHandle(ref,()=>({...}))</code></td>
+                  </tr>
+                  <tr data-key="react useId id accessibility">
+                    <td><code>useId</code></td>
+                    <td>Доступность</td>
+                    <td>Стабильные ID для связки label/input</td>
+                    <td><code>const id=useId()</code></td>
+                  </tr>
+                  <tr data-key="react useDebugValue devtools">
+                    <td><code>useDebugValue</code></td>
+                    <td>Диагностика</td>
+                    <td>Подписи для кастомных хуков</td>
+                    <td><code>useDebugValue('ready')</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>События (React Synthetic Events)</h3>
+            <div class="grid">
+              <div class="pill" data-key="react event onClick">eventHandler: <code>onClick</code> — клик мышью</div>
+              <div class="pill" data-key="react event onChange input">eventHandler: <code>onChange</code> — изменение значения</div>
+              <div class="pill" data-key="react event onSubmit form">eventHandler: <code>onSubmit</code> — отправка формы</div>
+              <div class="pill" data-key="react event onInput">eventHandler: <code>onInput</code> — ввод</div>
+              <div class="pill" data-key="react event onKeyDown keyboard">eventHandler: <code>onKeyDown</code> / <code>onKeyUp</code></div>
+              <div class="pill" data-key="react event onFocus blur">eventHandler: <code>onFocus</code> / <code>onBlur</code></div>
+              <div class="pill" data-key="react event onMouseEnter hover">eventHandler: <code>onMouseEnter</code> / <code>onMouseLeave</code></div>
+              <div class="pill" data-key="react event onContextMenu">eventHandler: <code>onContextMenu</code> — ПКМ</div>
+              <div class="pill" data-key="react event onScroll">eventHandler: <code>onScroll</code> — прокрутка</div>
+              <div class="pill" data-key="react event onTouchStart">eventHandler: <code>onTouchStart</code> / <code>onTouchEnd</code></div>
+            </div>
+            <div class="code"><button class="copy" data-copy>Копировать</button><pre><code>{`function Form(){
+  const [v,setV]=React.useState("")
+  function onSubmit(e){ e.preventDefault(); alert(v) }
+  return (
+    <form onSubmit={onSubmit}>
+      <input value={v} onChange={e=>setV(e.target.value)} />
+      <button>Send</button>
+    </form>
+  )
+}`}</code></pre></div>
+          </div>
+
+          <div class="card">
+            <h3>Ключевые понятия</h3>
+            <div class="kv">
+              <b>JSX</b><span>Синтаксис поверх JS, превращается в вызовы <code>createElement</code>.</span>
+              <b>Компоненты</b><span>Функциональные (основа) и классовые (устаревающие для новых проектов).</span>
+              <b>Props</b><span>Входные данные компонента. Иммутабельны.</span>
+              <b>State</b><span>Внутреннее состояние. Меняется через сеттеры.</span>
+              <b>Conditional</b><span><code>&&</code>, тернарный оператор, ранний return.</span>
+              <b>Lists & Keys</b><span><code>array.map</code> + стабильный <code>key</code>.</span>
+              <b>Контекст</b><span><code>createContext / useContext</code> для глобальных значений.</span>
+              <b>Роутинг</b><span>React Router: <code>&lt;Route&gt;</code>, <code>useNavigate</code>, <code>useParams</code>.</span>
+              <b>Redux</b><span><code>createSlice</code>, <code>configureStore</code>, <code>useSelector</code>, <code>useDispatch</code>.</span>
+              <b>SSR</b><span>Рендер на сервере (Next.js). Улучшает SEO и TTFB.</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Мини-конспект Redux Toolkit</h3>
+            <div class="code"><button class="copy" data-copy>Копировать</button><pre><code>{`const slice=createSlice({
+  name:'auth',
+  initialState:{user:null},
+  reducers:{ setUser:(s,a)=>{s.user=a.payload}, logout:(s)=>{s.user=null} }
+})
+const store=configureStore({reducer:{auth:slice.reducer}})
+export const {setUser,logout}=slice.actions`}</code></pre></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- JAVASCRIPT -->
+      <section id="javascript" class="section">
+        <h2>JavaScript — методы по полкам</h2>
+        <details open>
+          <summary>String (строки)</summary>
+          <div class="details-body">
+            <table class="table">
+              <thead><tr><th>Метод</th><th>Категория</th><th>Кратко</th><th>Пример</th></tr></thead>
+              <tbody>
+                <tr data-key="js string length"><td><code>length</code></td><td>Свойство</td><td>Длина строки</td><td><code>'abc'.length // 3</code></td></tr>
+                <tr data-key="js string includes"><td><code>includes()</code></td><td>Поиск</td><td>Содержит ли подстроку</td><td><code>'abc'.includes('b')</code></td></tr>
+                <tr data-key="js string indexOf lastIndexOf"><td><code>indexOf()</code> / <code>lastIndexOf()</code></td><td>Поиск</td><td>Позиция подстроки</td><td><code>'abcabc'.lastIndexOf('a')</code></td></tr>
+                <tr data-key="js string startsWith endsWith"><td><code>startsWith()</code> / <code>endsWith()</code></td><td>Поиск</td><td>Начинается/заканчивается на</td><td><code>'hello'.startsWith('he')</code></td></tr>
+                <tr data-key="js string slice substring substr"><td><code>slice()</code> / <code>substring()</code> / <code>substr*</code></td><td>Извлечение</td><td><code>substr</code> устаревший</td><td><code>'abcdef'.slice(1,4)</code></td></tr>
+                <tr data-key="js string replace replaceAll"><td><code>replace()</code> / <code>replaceAll()</code></td><td>Замена</td><td>Замена подстрок</td><td><code>'a_a'.replaceAll('_','-')</code></td></tr>
+                <tr data-key="js string split"><td><code>split()</code></td><td>Разбиение</td><td>Строка → массив</td><td><code>'a,b'.split(',')</code></td></tr>
+                <tr data-key="js string padStart padEnd"><td><code>padStart()</code> / <code>padEnd()</code></td><td>Выравнивание</td><td>Добивка символами</td><td><code>'7'.padStart(3,'0')</code></td></tr>
+                <tr data-key="js string trim"><td><code>trim()</code> (+ start/end)</td><td>Обрезка</td><td>Убирает пробелы по краям</td><td><code>'  x  '.trim()</code></td></tr>
+                <tr data-key="js string toLowerCase toUpperCase"><td><code>toLowerCase()</code> / <code>toUpperCase()</code></td><td>Регистр</td><td>Верхний/нижний регистр</td><td><code>'Ab'.toLowerCase()</code></td></tr>
+                <tr data-key="js string at charAt charCodeAt"><td><code>at()</code> / <code>charAt()</code> / <code>charCodeAt()</code></td><td>Доступ</td><td>Символ/код символа</td><td><code>'abc'.at(-1) // 'c'</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details open>
+          <summary>Array (массивы)</summary>
+          <div class="details-body">
+            <table class="table">
+              <thead><tr><th>Метод</th><th>Категория</th><th>Кратко</th><th>Пример</th></tr></thead>
+              <tbody>
+                <tr data-key="js array push pop shift unshift"><td><code>push()</code> / <code>pop()</code> / <code>shift()</code> / <code>unshift()</code></td><td>Мутация</td><td>Добавить/удалить в конец/начало</td><td><code>arr.push(1)</code></td></tr>
+                <tr data-key="js array splice slice"><td><code>splice()</code> / <code>slice()</code></td><td>Вырезка</td><td>Мутирующая/немутирующая</td><td><code>arr.slice(1,3)</code></td></tr>
+                <tr data-key="js array map filter reduce some every"><td><code>map()</code> / <code>filter()</code> / <code>reduce()</code> / <code>some()</code> / <code>every()</code></td><td>Итерация</td><td>Трансформация, отбор, свёртка, проверки</td><td><code>[1,2].reduce((a,b)=>a+b,0)</code></td></tr>
+                <tr data-key="js array find findIndex findLast findLastIndex"><td><code>find()</code> / <code>findIndex()</code> / <code>findLast()</code> / <code>findLastIndex()</code></td><td>Поиск</td><td>Элемент/индекс слева/справа</td><td><code>arr.find(x=>x.id===3)</code></td></tr>
+                <tr data-key="js array includes indexOf lastIndexOf"><td><code>includes()</code> / <code>indexOf()</code> / <code>lastIndexOf()</code></td><td>Поиск</td><td>Проверка наличия/позиция</td><td><code>arr.includes(5)</code></td></tr>
+                <tr data-key="js array concat flat flatMap"><td><code>concat()</code> / <code>flat()</code> / <code>flatMap()</code></td><td>Склейка</td><td>Объединение/уплощение</td><td><code>[[1],[2]].flat()</code></td></tr>
+                <tr data-key="js array sort reverse"><td><code>sort()</code> / <code>reverse()</code></td><td>Порядок</td><td>Сортировка/разворот (мутирует)</td><td><code>arr.sort((a,b)=>a-b)</code></td></tr>
+                <tr data-key="js array join toString toLocaleString"><td><code>join()</code> / <code>toString()</code></td><td>Строки</td><td>В строку</td><td><code>[1,2].join(',')</code></td></tr>
+                <tr data-key="js array entries keys values forEach"><td><code>entries()</code> / <code>keys()</code> / <code>values()</code> / <code>forEach()</code></td><td>Итерирование</td><td>Итераторы/перебор</td><td><code>for (const [i,v] of arr.entries()) {}</code></td></tr>
+                <tr data-key="js array copyWithin fill at from of"><td><code>copyWithin()</code> / <code>fill()</code> / <code>at()</code> / <code>Array.from()</code></td><td>Разное</td><td>Копия/заполнение/доступ/создание</td><td><code>Array.from('abc')</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details>
+          <summary>Object (объекты)</summary>
+          <div class="details-body">
+            <table class="table">
+              <thead><tr><th>Метод</th><th>Категория</th><th>Кратко</th><th>Пример</th></tr></thead>
+              <tbody>
+                <tr data-key="js object keys values entries fromEntries"><td><code>Object.keys()</code> / <code>values()</code> / <code>entries()</code> / <code>fromEntries()</code></td><td>Итерация</td><td>Ключи/значения/пары ↔ объект</td><td><code>Object.fromEntries([['a',1]])</code></td></tr>
+                <tr data-key="js object assign create"><td><code>Object.assign()</code> / <code>Object.create()</code></td><td>Создание</td><td>Копирование/прототип</td><td><code>Object.assign({},a,b)</code></td></tr>
+                <tr data-key="js object hasOwn"><td><code>Object.hasOwn()</code></td><td>Проверка</td><td>Собственный ключ</td><td><code>Object.hasOwn(o,'x')</code></td></tr>
+                <tr data-key="js object freeze seal preventExtensions"><td><code>freeze()</code> / <code>seal()</code> / <code>preventExtensions()</code></td><td>Иммутабельность</td><td>Заморозка/запечатывание/запрет новых</td><td><code>Object.freeze(o)</code></td></tr>
+                <tr data-key="js object is isExtensible isFrozen isSealed"><td><code>Object.is()</code> / <code>isExtensible()</code> / <code>isFrozen()</code> / <code>isSealed()</code></td><td>Сравнение/статус</td><td>Точное сравнение/флаги</td><td><code>Object.is(NaN,NaN) // true</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details>
+          <summary>Math / Number / Date (часто на собесе)</summary>
+          <div class="details-body">
+            <table class="table">
+              <thead><tr><th>API</th><th>Категория</th><th>Кратко</th><th>Пример</th></tr></thead>
+              <tbody>
+                <tr data-key="js math abs ceil floor round trunc max min sqrt pow random sign"><td><code>Math.abs/ceil/floor/round/trunc/max/min/sqrt/pow/random/sign</code></td><td>Математика</td><td>База для вычислений</td><td><code>Math.max(1,5,2)</code></td></tr>
+                <tr data-key="js number parseInt parseFloat isNaN isFinite toFixed"><td><code>Number()</code> / <code>parseInt()</code> / <code>parseFloat()</code> / <code>isNaN()</code> / <code>isFinite()</code> / <code>toFixed()</code></td><td>Числа</td><td>Преобразование и формат</td><td><code>(3.1415).toFixed(2)</code></td></tr>
+                <tr data-key="js date now get set toISOString toLocaleString"><td><code>Date.now()</code> / <code>new Date()</code> / <code>get*</code> / <code>set*</code> / <code>toISOString()</code> / <code>toLocaleString()</code></td><td>Даты</td><td>Работа со временем</td><td><code>new Date().toLocaleString('ru-RU')</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <!-- HTML -->
+      <section id="html" class="section">
+        <h2>HTML — семантика и формы</h2>
+        <div class="grid cols-2">
+          <div class="card">
+            <h3>Основные теги по категориям</h3>
+            <table class="table">
+              <thead><tr><th>Тег</th><th>Категория</th><th>Кратко</th><th>Пример</th></tr></thead>
+              <tbody>
+                <tr data-key="html structure doctype html head body">
+                  <td><code>&lt;!DOCTYPE&gt;, &lt;html&gt;, &lt;head&gt;, &lt;body&gt;</code></td><td>Структура</td><td>Каркас документа</td><td><code>&lt;!DOCTYPE html&gt;</code></td>
+                </tr>
+                <tr data-key="html semantics header nav main section article aside footer">
+                  <td><code>&lt;header&gt; &lt;nav&gt; &lt;main&gt; &lt;section&gt; &lt;article&gt; &lt;aside&gt; &lt;footer&gt;</code></td><td>Семантика</td><td>Логические блоки</td><td><code>&lt;main&gt;...&lt;/main&gt;</code></td>
+                </tr>
+                <tr data-key="html text h1 p span div">
+                  <td><code>&lt;h1..h6&gt; &lt;p&gt; &lt;span&gt; &lt;div&gt;</code></td><td>Текст</td><td>Заголовки и блоки</td><td><code>&lt;h2&gt;Заголовок&lt;/h2&gt;</code></td>
+                </tr>
+                <tr data-key="html media img audio video source">
+                  <td><code>&lt;img&gt; &lt;audio&gt; &lt;video&gt; &lt;source&gt;</code></td><td>Медиа</td><td>Изображения и видео/аудио</td><td><code>&lt;img src="..." alt="..." /&gt;</code></td>
+                </tr>
+                <tr data-key="html links a iframe">
+                  <td><code>&lt;a&gt;</code>, <code>&lt;iframe&gt;</code></td><td>Ссылки/встраивание</td><td>Переходы и внешние ресурсы</td><td><code>&lt;a href="/"&gt;Домой&lt;/a&gt;</code></td>
+                </tr>
+                <tr data-key="html table thead tbody tr td th">
+                  <td><code>&lt;table&gt; &lt;thead&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt; &lt;th&gt;</code></td><td>Таблицы</td><td>Структурированные данные</td><td><code>&lt;table&gt;...&lt;/table&gt;</code></td>
+                </tr>
+                <tr data-key="html forms form input textarea select option button label">
+                  <td><code>&lt;form&gt; &lt;input&gt; &lt;textarea&gt; &lt;select&gt; &lt;option&gt; &lt;button&gt; &lt;label&gt;</code></td><td>Формы</td><td>Сбор и отправка данных</td><td><code>&lt;input name="email" required /&gt;</code></td>
+                </tr>
+                <tr data-key="html meta link script style">
+                  <td><code>&lt;meta&gt; &lt;link&gt; &lt;script&gt; &lt;style&gt;</code></td><td>Служебные</td><td>SEO/ресурсы/скрипты/стили</td><td><code>&lt;meta charset="utf-8" /&gt;</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h3>Валидация и атрибуты форм</h3>
+            <div class="kv">
+              <b>Атрибуты</b><span><code>required</code>, <code>pattern</code>, <code>min/max</code>, <code>minlength/maxlength</code>, <code>step</code>, <code>name</code>, <code>value</code>.</span>
+              <b>Типы &lt;input&gt;</b><span><code>text</code>, <code>email</code>, <code>password</code>, <code>checkbox</code>, <code>radio</code>, <code>number</code>, <code>date</code>, <code>file</code>, <code>range</code>.</span>
+              <b>Связка label</b><span><code>&lt;label for="id"/&gt;</code> + <code>id</code> на элементе формы.</span>
+              <b>Автозаполнение</b><span><code>autocomplete</code>: off / email / one-time-code и т.д.</span>
+            </div>
+            <div class="code"><button class="copy" data-copy>Копировать</button><pre><code>{`<form>
+  <label for="em">Email</label>
+  <input id="em" type="email" required />
+  <button>Отправить</button>
+</form>`}</code></pre></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CSS -->
+      <section id="css" class="section">
+        <h2>CSS — свойства, селекторы, флекс/грид</h2>
+        <div class="grid cols-3">
+          <div class="card">
+            <h3>Часто спрашиваемые свойства</h3>
+            <table class="table">
+              <thead><tr><th>Свойство</th><th>Группа</th><th>Кратко</th><th>Пример</th></tr></thead>
+              <tbody>
+                <tr data-key="css color background border radius shadow"><td><code>color</code>, <code>background</code>, <code>border</code>, <code>border-radius</code>, <code>box-shadow</code></td><td>Внешний вид</td><td>Цвета/границы/тени</td><td><code>border-radius:12px</code></td></tr>
+                <tr data-key="css display flex grid"><td><code>display</code>, <code>flex</code>, <code>grid</code></td><td>Layout</td><td>Блочная модель и компоновка</td><td><code>display:flex</code></td></tr>
+                <tr data-key="css flex-direction wrap justify align"><td><code>flex-direction</code>, <code>flex-wrap</code>, <code>justify-content</code>, <code>align-items</code></td><td>Flex</td><td>Ось, перенос, выравнивание</td><td><code>justify-content:center</code></td></tr>
+                <tr data-key="css grid-template grid-gap"><td><code>grid-template-columns</code>, <code>grid-template-rows</code>, <code>gap</code></td><td>Grid</td><td>Сетка и отступы</td><td><code>grid-template-columns:repeat(3,1fr)</code></td></tr>
+                <tr data-key="css size width height max min"><td><code>width</code>, <code>height</code>, <code>max-width</code>, <code>min-width</code></td><td>Размеры</td><td>Границы размеров</td><td><code>max-width:1024px</code></td></tr>
+                <tr data-key="css spacing padding margin"><td><code>padding</code>, <code>margin</code></td><td>Отступы</td><td>Внутренние/внешние</td><td><code>margin:0 auto</code></td></tr>
+                <tr data-key="css position top right bottom left z-index"><td><code>position</code>, <code>top/right/bottom/left</code>, <code>z-index</code></td><td>Позиционирование</td><td>Абсолютное/фикс/относительное</td><td><code>position:absolute</code></td></tr>
+                <tr data-key="css overflow opacity transform transition animation"><td><code>overflow</code>, <code>opacity</code>, <code>transform</code>, <code>transition</code>, <code>animation</code></td><td>Эффекты</td><td>Скрытие/прозрачность/анимации</td><td><code>transition:all .2s</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h3>Селекторы</h3>
+            <table class="table">
+              <thead><tr><th>Селектор</th><th>Категория</th><th>Кратко</th><th>Пример</th></tr></thead>
+              <tbody>
+                <tr data-key="css selector universal class id element"><td><code>*</code>, <code>.class</code>, <code>#id</code>, <code>element</code></td><td>Базовые</td><td>Выбор по типу/классу/ID</td><td><code>.btn { padding:8px }</code></td></tr>
+                <tr data-key="css selector descendant child adjacent sibling"><td><code>A B</code>, <code>A &gt; B</code>, <code>A + B</code>, <code>A ~ B</code></td><td>Иерархия</td><td>Потомок/ребёнок/соседи</td><td><code>nav a { ... }</code></td></tr>
+                <tr data-key="css selector attribute"><td><code>[attr=value]</code></td><td>Атрибут</td><td>По значению атрибута</td><td><code>input[type="email"]</code></td></tr>
+                <tr data-key="css selector pseudo-class"><td><code>:hover</code>, <code>:focus</code>, <code>:active</code>, <code>:nth-child()</code></td><td>Псевдоклассы</td><td>Состояния/позиция</td><td><code>li:nth-child(2)</code></td></tr>
+                <tr data-key="css selector pseudo-element"><td><code>::before</code>, <code>::after</code></td><td>Псевдоэлементы</td><td>Декоративный контент</td><td><code>.el::after{content:""}</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h3>Flex & Grid — мини-памятка</h3>
+            <div class="code"><button class="copy" data-copy>Копировать</button><pre><code>{`/* Flex */
+.container{display:flex;gap:12px;align-items:center;justify-content:space-between}
+/* Grid */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}`}</code></pre></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SNIPPETS -->
+      <section id="snippets" class="section">
+        <h2>Готовые сниппеты под собес</h2>
+        <div class="grid cols-2">
+          <div class="card">
+            <h3>Функции высшего порядка (JS)</h3>
+            <div class="desc">Разница между <code>map</code>, <code>filter</code>, <code>reduce</code>, <code>some</code>, <code>every</code>.</div>
+            <div class="code"><button class="copy" data-copy>Копировать</button><pre><code>{`const xs=[1,2,3]
+xs.map(x=>x*2)         // [2,4,6]
+xs.filter(x=>x%2)      // [1,3]
+xs.reduce((a,b)=>a+b,0)// 6
+xs.some(x=>x>2)        // true
+xs.every(x=>x>0)       // true`}</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Контролируемая форма (React)</h3>
+            <div class="code"><button class="copy" data-copy>Копировать</button><pre><code>{`function Login(){
+  const [form,setForm]=React.useState({email:'',pass:''})
+  const onChange=e=>setForm({...form,[e.target.name]:e.target.value})
+  function submit(e){e.preventDefault(); /* fetch('/api', {method:'POST', body: JSON.stringify(form)}) */}
+  return (
+    <form onSubmit={submit}>
+      <input name="email" value={form.email} onChange={onChange} />
+      <input name="pass" type="password" value={form.pass} onChange={onChange} />
+      <button>Log in</button>
+    </form>
+  )
+}`}</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Декларативный рендер списков (React)</h3>
+            <div class="code"><button class="copy" data-copy>Копировать</button><pre><code>{`function List({items}){
+  return <ul>{items.map(item => <li key={item.id}>{item.title}</li>)}</ul>
+}`}</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Роутинг (React Router v6)</h3>
+            <div class="code"><button class="copy" data-copy>Копировать</button><pre><code>{`import {BrowserRouter,Routes,Route,Link,useParams,useNavigate} from 'react-router-dom'
+function App(){
+  return (
+    <BrowserRouter>
+      <nav><Link to="/">Home</Link> | <Link to="/user/42">User</Link></nav>
+      <Routes>
+        <Route path="/" element={<Home/>} />
+        <Route path="/user/:id" element={<User/>} />
+      </Routes>
+    </BrowserRouter>
+  )
+}
+function User(){
+  const {id}=useParams(); const nav=useNavigate();
+  return (<>
+    <h2>User {id}</h2>
+    <button onClick={()=>nav('/')}>Go Home</button>
+  </>)
+}`}</code></pre></div>
+          </div>
+        </div>
+      </section>
+
+      <p class="footer">© Полат Исмаилов — подготовка к собеседованию. Версия 1.0. Подправим и расширим при необходимости.</p>
+    </main>
+  </div>
+
+  <script>
+    // Поиск/фильтр — скрываем карточки и строки таблиц, в которых нет совпадения
+    const q = document.getElementById('search');
+    const datasetElems = () => [
+      ...document.querySelectorAll('[data-key]'),
+      ...[...document.querySelectorAll('tbody tr')].filter(tr=>tr.dataset.key)
+    ];
+    function filter(){
+      const v = q.value.trim().toLowerCase();
+      const items = datasetElems();
+      if(!v){ items.forEach(el=> el.style.display=''); return }
+      items.forEach(el=>{
+        const key=(el.getAttribute('data-key')||'').toLowerCase();
+        el.style.display = key.includes(v) ? '' : 'none';
+      });
+    }
+    q.addEventListener('input', filter);
+
+    // Копирование сниппетов
+    document.querySelectorAll('[data-copy]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const code=btn.nextElementSibling.innerText; navigator.clipboard.writeText(code);
+        btn.textContent='Скопировано!'; setTimeout(()=>btn.textContent='Копировать',1200);
+      });
+    });
+  </script>
+  <!-- Для React-демо в сниппетах (не обязательно подключать, но полезно при локальном открытии) -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+</body>
+</html>
